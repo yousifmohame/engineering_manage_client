@@ -48,7 +48,7 @@ export default function Sidebar({ isOpen, toggleMobileMenu }) {
           <SidebarLink to="/properties" icon={House} label="العقارات" />
           <SidebarLink to="/property-partners" icon={Users} label="شركاء العقارات" />
           <SidebarLink to="/tower" icon={Building2} label="شراكة عمارة طيبة" />
-          <SidebarLink to="/partnership" icon={Briefcase} label="شراكتي مع نظمي" />
+          <SidebarLink to="/nazmi-partnership" icon={Briefcase} label="شراكتي مع نظمي" />
           <SidebarLink to="/partnership-expenses" icon={FileText} label="مصروفات تشغيل المكتب" />
           <SidebarLink to="/bank-accounts" icon={Landmark} label="الأرصدة البنكية للشركة" />
           <SidebarLink to="/youssef" icon={Users} label="شراكتي مع يوسف" />
