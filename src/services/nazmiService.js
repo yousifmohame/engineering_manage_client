@@ -1,54 +1,45 @@
+import axios from "axios";
+
 const API_URL = `${import.meta.env.VITE_API_URL}/nazmi`;
 
 export const nazmiService = {
   async getData() {
-    return (await fetch(API_URL)).json();
+    const res = await axios.get(API_URL);
+    return res.data;
   },
 
-  // حفظ وتحديث الإعدادات الأساسية
   async updateSettings(data) {
-    return (
-      await fetch(`${API_URL}/settings`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-    ).json();
+    const res = await axios.put(`${API_URL}/settings`, data);
+    return res.data;
   },
 
-  // إضافة حركة (إيراد/مصروف/توزيع)
-  async addTransaction(data) {
-    return (
-      await fetch(`${API_URL}/transaction`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-    ).json();
+  // ✅ التعديل هنا: الدالة تستقبل formData مبنية وجاهزة من الشاشة
+  async addTransaction(formData) {
+    const res = await axios.post(`${API_URL}/transactions`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res.data;
   },
 
-  // تعديل حركة (الجديد ✨)
-  async updateTransaction(id, data) {
-    return (
-      await fetch(`${API_URL}/transaction/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-    ).json();
+  // ✅ التعديل هنا أيضاً
+  async updateTransaction(id, formData) {
+    const res = await axios.put(`${API_URL}/transactions/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res.data;
   },
 
-  // حذف حركة
   async deleteTransaction(id) {
-    return (
-      await fetch(`${API_URL}/transaction/${id}`, { method: "DELETE" })
-    ).json();
+    const res = await axios.delete(`${API_URL}/transactions/${id}`);
+    return res.data;
   },
 
-  // توليد تقرير الذكاء الاصطناعي (الجديد ✨)
   async generateAIReport() {
-    return (
-      await fetch(`${API_URL}/ai-report`)
-    ).json();
-  }
+    const res = await axios.get(`${API_URL}/ai-report`);
+    return res.data;
+  },
 };
