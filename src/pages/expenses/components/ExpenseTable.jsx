@@ -14,7 +14,7 @@ export default function ExpenseTable({ expenses, loading, onDelete, onEdit }) {
               <th className="p-3">الفئة</th>
               <th className="p-3">الوصف</th>
               <th className="p-3">المبلغ</th>
-              <th className="p-3 text-center">إجراءات</th> {/* عمود الإجراءات */}
+              <th className="p-3 text-center">إجراءات</th>
             </tr>
           </thead>
           <tbody className="divide-y text-xs">
@@ -25,7 +25,6 @@ export default function ExpenseTable({ expenses, loading, onDelete, onEdit }) {
                 <td className="p-3 text-slate-800 font-medium">{exp.description}</td>
                 <td className="p-3 font-black text-red-600">{exp.amount.toLocaleString()} SAR</td>
                 
-                {/* أزرار الحذف والتعديل */}
                 <td className="p-3 flex items-center justify-center gap-2">
                   <button onClick={() => onEdit(exp)} className="p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors">
                     <Edit size={14} />

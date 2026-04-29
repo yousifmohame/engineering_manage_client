@@ -10,7 +10,7 @@ import TowerPage from "./pages/tower"; // تأكد من المسار الصحي�
 import NazmiPartnershipPage from "./pages/nazmi-partnership"; // تأكد من المسار الصحيح
 import YoussefPartnershipPage from "./pages/youssef-partnership"; // تأكد من المسار الصحيح
 import PartnershipExpensesPage from "./pages/office-expenses"; // تأكد من المسار الصحيح
-
+import YoussefPortal from './pages/youssef-portal';
 // مكون مؤقت للصفحات التي لم نبنها بعد
 const Placeholder = ({ title }) => (
   <div className="p-8 flex items-center justify-center h-[80vh]">
@@ -34,6 +34,7 @@ export default function App() {
           <Route path="tower" element={<TowerPage />} />
           <Route path="nazmi-partnership" element={<NazmiPartnershipPage />} />
           <Route path="youssef" element={<YoussefPartnershipPage />} />
+          <Route path="youssef-portal" element={<YoussefPortal />} />
           <Route
             path="partnership-expenses"
             element={<PartnershipExpensesPage />}
