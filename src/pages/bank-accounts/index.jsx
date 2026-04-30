@@ -603,6 +603,7 @@ export default function BankAccountsPage() {
               )}
 
               {/* 2. Add Account */}
+              {/* 2. Add Account */}
               {activeModal === "account" && (
                 <form onSubmit={handleAccountSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -616,7 +617,7 @@ export default function BankAccountsPage() {
                       }
                     />
                     <InputFull
-                      label="وصف الحساب"
+                      label="اسم/وصف الحساب"
                       icon={<Tag size={14} />}
                       placeholder="حساب جاري - فرع جدة"
                       value={accountForm.accountName}
@@ -629,7 +630,7 @@ export default function BankAccountsPage() {
                         العملة
                       </label>
                       <select
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold outline-none"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500"
                         value={accountForm.currency}
                         onChange={(e) =>
                           setAccountForm({
@@ -638,9 +639,9 @@ export default function BankAccountsPage() {
                           })
                         }
                       >
-                        <option value="SAR">SAR</option>
-                        <option value="USD">USD</option>
-                        <option value="EGP">EGP</option>
+                        <option value="SAR">ريال سعودي (SAR)</option>
+                        <option value="USD">دولار أمريكي (USD)</option>
+                        <option value="EGP">جنيه مصري (EGP)</option>
                       </select>
                     </div>
                     <InputFull
@@ -668,7 +669,57 @@ export default function BankAccountsPage() {
                         setAccountForm({ ...accountForm, iban: v })
                       }
                     />
+
+                    {/* --- الحقول المضافة --- */}
+                    <InputFull
+                      label="SWIFT Code"
+                      icon={<Globe size={14} />} // يمكنك استخدام أيقونة أنسب هنا إذا أردت
+                      placeholder="مثال: NCBBSARI"
+                      value={accountForm.swiftCode}
+                      onChange={(v) =>
+                        setAccountForm({ ...accountForm, swiftCode: v })
+                      }
+                      required={false}
+                    />
+                    <InputFull
+                      label="رسوم الإيداع (%)"
+                      type="number"
+                      icon={<Percent size={14} />}
+                      placeholder="0"
+                      value={accountForm.depositFees}
+                      onChange={(v) =>
+                        setAccountForm({ ...accountForm, depositFees: v })
+                      }
+                      required={false}
+                    />
                   </div>
+
+                  {/* قسم أسعار الصرف */}
+                  <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl mt-4 space-y-3">
+                    <h4 className="text-xs font-black text-slate-700 flex items-center gap-1.5 border-b border-slate-200 pb-2">
+                      <ArrowRightLeft size={14} className="text-indigo-600" />{" "}
+                      إعدادات أسعار الصرف الافتراضية
+                    </h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <InputCompact
+                        label="سعر صرف SAR إلى USD"
+                        type="number"
+                        value={accountForm.exchangeRateUSD}
+                        onChange={(v) =>
+                          setAccountForm({ ...accountForm, exchangeRateUSD: v })
+                        }
+                      />
+                      <InputCompact
+                        label="سعر صرف SAR إلى EGP"
+                        type="number"
+                        value={accountForm.exchangeRateEGP}
+                        onChange={(v) =>
+                          setAccountForm({ ...accountForm, exchangeRateEGP: v })
+                        }
+                      />
+                    </div>
+                  </div>
+
                   <div className="flex gap-2 pt-4 border-t mt-4">
                     <button
                       type="button"
@@ -681,7 +732,7 @@ export default function BankAccountsPage() {
                       type="submit"
                       className="flex-[2] bg-indigo-600 text-white py-3 rounded-2xl font-black text-xs shadow-lg flex items-center justify-center gap-2"
                     >
-                      <Save size={16} /> حفظ
+                      <Save size={16} /> حفظ الحساب
                     </button>
                   </div>
                 </form>
