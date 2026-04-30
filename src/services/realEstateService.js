@@ -1,43 +1,41 @@
 const BASE_URL = `${import.meta.env.VITE_API_URL}/real-estate`;
 
 export const realEstateService = {
-  // جلب العقارات
+  // 1. جلب العقارات
   getAll: async () => {
     const response = await fetch(BASE_URL);
     if (!response.ok) throw new Error('فشل جلب العقارات');
     return response.json();
   },
 
-  // إضافة عقار
-  create: async (data) => {
+  // 2. إضافة عقار (تم التحديث ليدعم الملفات FormData)
+  create: async (formData) => {
     const response = await fetch(BASE_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      // ⚠️ ملاحظة هامة: لا نضع headers: {'Content-Type': 'application/json'} هنا أبداً!
+      // المتصفح سيتعرف تلقائياً على FormData ويضع الـ Boundary المناسب للملفات.
+      body: formData, // نرسل الـ FormData مباشرة بدون JSON.stringify
     });
     if (!response.ok) throw new Error('فشل إضافة العقار');
     return response.json();
   },
 
-  // حذف عقار
+  // 3. تعديل عقار (تم التحديث ليدعم الملفات FormData)
+  update: async (id, formData) => {
+    const response = await fetch(`${BASE_URL}/${id}`, {
+      method: 'PUT',
+      body: formData, // نرسل الـ FormData مباشرة
+    });
+    if (!response.ok) throw new Error('فشل تعديل العقار');
+    return response.json();
+  },
+
+  // 4. حذف عقار
   delete: async (id) => {
     const response = await fetch(`${BASE_URL}/${id}`, {
       method: 'DELETE',
     });
     if (!response.ok) throw new Error('فشل الحذف');
     return response.json();
-  },
-
-  // تعديل عقار موجود
-  update: async (id, data) => {
-    const response = await fetch(`${BASE_URL}/${id}`, {
-      method: 'PUT', // نستخدم PUT للتعديل
-      // ملاحظة: لا نضيف Content-Type هنا لأننا نرسل FormData (ملفات + نصوص)
-      // المتصفح سيقوم بوضع Content-Type المناسب مع الـ Boundary تلقائياً
-      body: data,
-    });
-    
-    if (!response.ok) throw new Error('فشل تعديل العقار');
-    return response.json();
-  },
+  }
 };
