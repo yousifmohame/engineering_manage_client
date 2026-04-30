@@ -3,23 +3,26 @@ import { goldService } from "../../services/goldService";
 import { Coins, Plus, RefreshCw, Trash2, Edit } from "lucide-react";
 
 export default function GoldPage() {
-  // 🌟 تحديث: التهيئة الافتراضية أصبحت investments بدلاً من gold
+  // 1. تهيئة البيانات بشكل آمن لضمان وجود مصفوفة دائماً
   const [data, setData] = useState({ investments: [], summary: {} });
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
+  // 2. دالة جلب البيانات من الخادم
   const loadData = async () => {
     setLoading(true);
     try {
       const response = await goldService.getGold();
-      // ضمان وجود مصفوفة investments لتجنب الانهيار
+      // تأمين البيانات القادمة من الخادم: إذا كانت فارغة، نضع مصفوفة فارغة كبديل
       setData({
-        investments: response.investments || [],
-        summary: response.summary || {},
+        investments: response?.investments || [],
+        summary: response?.summary || {},
       });
     } catch (e) {
-      console.error(e);
+      console.error("خطأ في جلب بيانات الذهب:", e);
+      // في حالة حدوث خطأ، نضمن بقاء الهيكل سليماً
+      setData({ investments: [], summary: {} });
     }
     setLoading(false);
   };
@@ -38,15 +41,15 @@ export default function GoldPage() {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("حذف هذا السجل؟")) {
+    if (window.confirm("هل أنت متأكد من حذف هذا السجل؟")) {
       await goldService.deleteGold(id);
       loadData();
     }
   };
 
-  // 🌟 حساب متوسط السعر يدوياً
-  const totalWeight = data.summary.totalWeight || 0;
-  const totalCost = data.summary.totalCost || 0;
+  // 3. حساب الأرقام بشكل آمن وتجنب الأخطاء الحسابية
+  const totalWeight = data?.summary?.totalWeight || 0;
+  const totalCost = data?.summary?.totalCost || 0;
   const avgPrice = totalWeight > 0 ? (totalCost / totalWeight).toFixed(2) : 0;
 
   return (
@@ -62,16 +65,16 @@ export default function GoldPage() {
         <div className="flex gap-2">
           <button
             onClick={loadData}
-            className="p-1.5 border rounded-lg hover:bg-slate-50"
+            className="p-1.5 border rounded-lg hover:bg-slate-50 transition-colors"
           >
-            <RefreshCw size={14} />
+            <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
           </button>
           <button
             onClick={() => {
               setEditingItem(null);
               setShowForm(!showForm);
             }}
-            className="bg-amber-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1"
+            className="bg-amber-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 hover:bg-amber-600 transition-colors"
           >
             <Plus size={14} /> تسجيل ذهب
           </button>
@@ -133,45 +136,65 @@ export default function GoldPage() {
               </tr>
             </thead>
             <tbody className="divide-y text-xs">
-              {/* 🌟 تحديث: استخدام data.investments واستخدام itemType */}
-              {data.investments.map((item) => (
-                <tr key={item.id} className="hover:bg-amber-50/30">
-                  <td className="p-3 text-slate-500 font-medium">
-                    {new Date(item.date).toLocaleDateString("ar-EG")}
-                  </td>
-                  <td className="p-3 font-bold text-slate-800">
-                    {item.itemType}
-                  </td>
-                  <td className="p-3">
-                    <span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md font-black">
-                      عيار {item.karat}
-                    </span>
-                  </td>
-                  <td className="p-3 font-black text-slate-800">
-                    {item.weight} ج
-                  </td>
-                  <td className="p-3 font-black text-amber-600">
-                    {item.buyPrice.toLocaleString()} SAR
-                  </td>
-                  <td className="p-3 flex items-center justify-center gap-2">
-                    <button
-                      onClick={() => {
-                        setEditingItem(item);
-                        setShowForm(true);
-                      }}
-                      className="p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg"
-                    >
-                      <Edit size={14} />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(item.id)}
-                      className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg"
-                    >
-                      <Trash2 size={14} />
-                    </button>
+              {/* 🌟 السر هنا: استخدام (data.investments || []) يضمن عدم انهيار الكود أبداً حتى لو كانت البيانات غير موجودة */}
+              {loading ? (
+                <tr>
+                  <td colSpan="6" className="p-4 text-center text-slate-500">
+                    جاري التحميل...
                   </td>
                 </tr>
-              ))}
+              ) : (data?.investments || []).length === 0 ? (
+                <tr>
+                  <td
+                    colSpan="6"
+                    className="p-4 text-center text-slate-500 font-bold"
+                  >
+                    لا توجد سجلات ذهب مضافة حتى الآن.
+                  </td>
+                </tr>
+              ) : (
+                (data?.investments || []).map((item) => (
+                  <tr
+                    key={item.id}
+                    className="hover:bg-amber-50/30 transition-colors"
+                  >
+                    <td className="p-3 text-slate-500 font-medium">
+                      {new Date(item.date).toLocaleDateString("ar-EG")}
+                    </td>
+                    <td className="p-3 font-bold text-slate-800">
+                      {item.itemType}
+                    </td>
+                    <td className="p-3">
+                      <span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md font-black">
+                        عيار {item.karat}
+                      </span>
+                    </td>
+                    <td className="p-3 font-black text-slate-800">
+                      {item.weight} ج
+                    </td>
+                    <td className="p-3 font-black text-amber-600">
+                      {item.buyPrice.toLocaleString()} SAR
+                    </td>
+                    <td className="p-3 flex items-center justify-center gap-2">
+                      <button
+                        onClick={() => {
+                          setEditingItem(item);
+                          setShowForm(true);
+                        }}
+                        className="p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+                      >
+                        <Edit size={14} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(item.id)}
+                        className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -198,7 +221,7 @@ function GoldForm({ initialData, onSubmit, onCancel }) {
   );
 
   const inputClass =
-    "w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs outline-none focus:bg-white focus:border-amber-400";
+    "w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs outline-none focus:bg-white focus:border-amber-400 transition-colors";
 
   return (
     <form
@@ -208,7 +231,6 @@ function GoldForm({ initialData, onSubmit, onCancel }) {
       }}
       className="bg-white border border-amber-200 p-3 rounded-xl shadow-sm grid grid-cols-2 lg:grid-cols-6 gap-2 animate-in fade-in"
     >
-      {/* 🌟 تحديث: استخدام itemType بدلاً من type لأن الخادم يتوقع ذلك */}
       <select
         className={inputClass}
         value={form.itemType}
@@ -256,14 +278,14 @@ function GoldForm({ initialData, onSubmit, onCancel }) {
       <div className="flex gap-1">
         <button
           type="submit"
-          className="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg text-xs py-1.5"
+          className="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg text-xs py-1.5 transition-colors"
         >
           {initialData ? "تحديث" : "حفظ"}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-lg px-2 text-xs"
+          className="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-lg px-2 text-xs transition-colors"
         >
           إلغاء
         </button>
