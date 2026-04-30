@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { TrendingDown, Calendar, BrainCircuit, Receipt, History, Plus, X, Save, Pen, Trash2, ChevronDown, Paperclip, ExternalLink } from 'lucide-react';
 import { nazmiService } from '../../services/nazmiService';
 
-const BASE_SERVER_URL = `${import.meta.env.VITE_API_URL}`;
 const CATEGORIES_LIST = ['مكتب', 'رواتب', 'فواتير', 'أدوات', 'ايجار المقر', 'تاسيس وتشطيب', 'أخرى'];
 
-export default function PartnershipExpenses({ settings, transactions, reload }) {
+export default function PartnershipExpenses({ settings, getFullUrl, transactions, reload }) {
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -114,12 +113,6 @@ export default function PartnershipExpenses({ settings, transactions, reload }) 
       alert("حدث خطأ أثناء الحفظ"); 
     }
     setSubmitting(false);
-  };
-
-  const getFullUrl = (url) => {
-    if (!url) return "";
-    const fullPath = url.startsWith("http") ? url : `${BASE_SERVER_URL}${url}`;
-    return encodeURI(fullPath);
   };
 
   const handleDelete = async (id) => {

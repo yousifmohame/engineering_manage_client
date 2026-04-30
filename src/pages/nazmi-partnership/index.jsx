@@ -18,6 +18,8 @@ import PartnershipDistributions from "./PartnershipDistributions";
 import PartnershipReports from "./PartnershipReports";
 import { nazmiService } from "../../services/nazmiService";
 
+const BASE_SERVER_URL = `${import.meta.env.VITE_API_URL}`;
+
 export default function NazmiPartnershipPage() {
   const [activeTab, setActiveTab] = useState("income");
   const [settings, setSettings] = useState({
@@ -83,6 +85,12 @@ export default function NazmiPartnershipPage() {
     } catch (error) {
       alert("حدث خطأ أثناء حفظ الإعدادات");
     }
+  };
+
+  const getFullUrl = (url) => {
+    if (!url) return "";
+    const fullPath = url.startsWith("http") ? url : `${BASE_SERVER_URL}${url}`;
+    return encodeURI(fullPath);
   };
 
   const tabs = [
@@ -175,7 +183,7 @@ export default function NazmiPartnershipPage() {
             <PartnershipIncome settings={settings} transactions={transactions} reload={loadData} />
           )}
           {activeTab === "expenses" && (
-            <PartnershipExpenses settings={settings} transactions={transactions} reload={loadData} />
+            <PartnershipExpenses settings={settings} getFullUrl={getFullUrl} transactions={transactions} reload={loadData} />
           )}
           {activeTab === "distributions" && (
             <PartnershipDistributions settings={settings} transactions={transactions} reload={loadData} />
