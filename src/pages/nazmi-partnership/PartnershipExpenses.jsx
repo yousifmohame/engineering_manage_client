@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { TrendingDown, Calendar, BrainCircuit, Receipt, History, Plus, X, Save, Pen, Trash2, ChevronDown, Paperclip, ExternalLink } from 'lucide-react';
 import { nazmiService } from '../../services/nazmiService';
 
+const BASE_SERVER_URL = `${import.meta.env.VITE_API_URL}`;
 const CATEGORIES_LIST = ['مكتب', 'رواتب', 'فواتير', 'أدوات', 'ايجار المقر', 'تاسيس وتشطيب', 'أخرى'];
 
 export default function PartnershipExpenses({ settings, transactions, reload }) {
@@ -113,6 +114,12 @@ export default function PartnershipExpenses({ settings, transactions, reload }) 
       alert("حدث خطأ أثناء الحفظ"); 
     }
     setSubmitting(false);
+  };
+
+  const getFullUrl = (url) => {
+    if (!url) return "";
+    const fullPath = url.startsWith("http") ? url : `${BASE_SERVER_URL}${url}`;
+    return encodeURI(fullPath);
   };
 
   const handleDelete = async (id) => {
@@ -235,7 +242,7 @@ export default function PartnershipExpenses({ settings, transactions, reload }) 
                   </td>
                   <td className="px-4 py-3 text-center">
                     {exp.attachment ? (
-                       <a href={`${import.meta.env.VITE_API_URL.replace('/api', '')}${exp.attachment}`} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline flex items-center justify-center gap-1 font-bold">
+                       <a href={getFullUrl(exp.attachment)} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline flex items-center justify-center gap-1 font-bold">
                          <Paperclip size={12}/> عرض
                        </a>
                     ) : (
@@ -340,7 +347,7 @@ export default function PartnershipExpenses({ settings, transactions, reload }) 
                       className="w-full text-[11px] file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-red-100 file:text-red-700 hover:file:bg-red-200 outline-none"
                     />
                     {form.attachmentUrl && !form.attachmentFile && (
-                      <a href={`${import.meta.env.VITE_API_URL.replace('/api', '')}${form.attachmentUrl}`} target="_blank" rel="noreferrer" className="text-[10px] text-blue-600 font-bold flex items-center gap-1 mt-1">
+                      <a href={getFullUrl(form.attachmentUrl)} target="_blank" rel="noreferrer" className="text-[10px] text-blue-600 font-bold flex items-center gap-1 mt-1">
                         <ExternalLink size={10}/> المرفق الحالي
                       </a>
                     )}
@@ -410,7 +417,7 @@ function ExpenseCard({ item, onEdit, onDelete }) {
               </span>
             )}
             {item.attachment && (
-              <a href={`${import.meta.env.VITE_API_URL.replace('/api', '')}${item.attachment}`} target="_blank" rel="noreferrer" className="text-blue-500 hover:text-blue-700">
+              <a href={getFullUrl(item.attachment)} target="_blank" rel="noreferrer" className="text-blue-500 hover:text-blue-700">
                 <Paperclip size={12}/>
               </a>
             )}

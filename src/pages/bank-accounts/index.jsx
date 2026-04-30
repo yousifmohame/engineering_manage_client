@@ -29,6 +29,8 @@ import { bankService } from "../../services/bankService";
 import { safeService } from "../../services/safeService";
 import { goldService } from "../../services/goldService";
 
+const BASE_SERVER_URL = `${import.meta.env.VITE_API_URL}`;
+
 export default function BankAccountsPage() {
   const [bankData, setBankData] = useState({ accounts: [], totalAllBanks: 0 });
   const [safeSummary, setSafeSummary] = useState({ totalBalance: 0 });
@@ -203,6 +205,12 @@ export default function BankAccountsPage() {
       attachmentFile: null,
     });
     setActiveModal("transaction");
+  };
+
+  const getFullUrl = (url) => {
+    if (!url) return "";
+    const fullPath = url.startsWith("http") ? url : `${BASE_SERVER_URL}${url}`;
+    return encodeURI(fullPath);
   };
 
   const totalAssets =
@@ -555,7 +563,7 @@ export default function BankAccountsPage() {
                                 <td className="p-3 text-center">
                                   {tx.attachment ? (
                                     <a
-                                      href={`${import.meta.env.VITE_API_URL.replace("/api", "")}${tx.attachment}`}
+                                      href={getFullUrl(tx.attachment)}
                                       target="_blank"
                                       rel="noreferrer"
                                       className="inline-flex items-center gap-1 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded text-[10px]"

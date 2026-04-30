@@ -110,7 +110,7 @@ export default function DashboardPage() {
         {/* --- الترحيب والإجراءات السريعة --- */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
           <div>
-            <h1 className="text-3xl font-black text-slate-900 tracking-tight">أهلاً بك مجدداً، يوسف!</h1>
+            <h1 className="text-3xl font-black text-slate-900 tracking-tight">أهلاً بك مجدداً، مصطفي!</h1>
             <p className="text-slate-500 mt-1 font-medium">"الاستثمار في المعرفة يدفع أفضل فائدة." - بنجامين فرانكلين</p>
           </div>
           <div className="flex flex-wrap gap-3">

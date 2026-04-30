@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { nazmiService } from "../../services/nazmiService";
 
+const BASE_SERVER_URL = `${import.meta.env.VITE_API_URL}`;
+
 const CATEGORIES_LIST = [
   "مكتب",
   "رواتب",
@@ -122,6 +124,12 @@ export default function PartnershipExpensesPage() {
         return { ...prev, categories: [...prev.categories, cat] };
       }
     });
+  };
+
+  const getFullUrl = (url) => {
+    if (!url) return "";
+    const fullPath = url.startsWith("http") ? url : `${BASE_SERVER_URL}${url}`;
+    return encodeURI(fullPath);
   };
 
   const handleSubmit = async (e) => {
@@ -342,7 +350,7 @@ export default function PartnershipExpensesPage() {
                     <td className="px-4 py-3">
                       {exp.attachment ? (
                         <a
-                          href={`http://localhost:5001${exp.attachment}`}
+                          href={getFullUrl(exp.attachment)}
                           target="_blank"
                           rel="noreferrer"
                           className="text-blue-600 hover:underline flex items-center gap-1 font-bold"
@@ -476,7 +484,7 @@ export default function PartnershipExpensesPage() {
                       />
                       {form.attachmentUrl && !form.attachmentFile && (
                         <a
-                          href={`http://localhost:5001${form.attachmentUrl}`}
+                          href={getFullUrl(form.attachmentUrl)}
                           target="_blank"
                           rel="noreferrer"
                           className="text-[10px] text-blue-600 font-bold flex items-center gap-1 mt-1"
