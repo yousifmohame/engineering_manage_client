@@ -10,7 +10,13 @@ import TowerPage from "./pages/tower"; // تأكد من المسار الصحي�
 import NazmiPartnershipPage from "./pages/nazmi-partnership"; // تأكد من المسار الصحيح
 import YoussefPartnershipPage from "./pages/youssef-partnership"; // تأكد من المسار الصحيح
 import PartnershipExpensesPage from "./pages/office-expenses"; // تأكد من المسار الصحيح
-import YoussefPortal from './pages/youssef-portal';
+import YoussefPortal from "./pages/youssef-portal";
+import FilesPage from "./pages/files"; // تأكد من المسار الصحيح
+import AiInsightsPage from "./pages/ai-insights";
+import AnalyticsHistoryPage from "./pages/ai-history";
+import RealEstatePage from "./pages/real-estate";
+import RealEstatePartnersPage from "./pages/real-estate-partners";
+import DashboardPage from "./pages/dashboard";
 // مكون مؤقت للصفحات التي لم نبنها بعد
 const Placeholder = ({ title }) => (
   <div className="p-8 flex items-center justify-center h-[80vh]">
@@ -26,7 +32,7 @@ export default function App() {
       <Routes>
         {/* نستخدم AppLayout كأب لكل الصفحات المحمية */}
         <Route path="/" element={<AppLayout />}>
-          <Route index element={<Placeholder title="لوحة التحكم" />} />
+          <Route index element={<DashboardPage />} />
           <Route path="safe" element={<SafePage />} />
           <Route path="expenses" element={<ExpensesPage />} />
           <Route path="gold" element={<GoldPage />} />
@@ -35,17 +41,19 @@ export default function App() {
           <Route path="nazmi-partnership" element={<NazmiPartnershipPage />} />
           <Route path="youssef" element={<YoussefPartnershipPage />} />
           <Route path="youssef-portal" element={<YoussefPortal />} />
+          <Route path="files" element={<FilesPage />} />
+          <Route path="ai-insights" element={<AiInsightsPage />} />
+          <Route path="ai-history" element={<AnalyticsHistoryPage />} />
           <Route
             path="partnership-expenses"
             element={<PartnershipExpensesPage />}
           />
-          {/* باقي المسارات */}
-          <Route path="properties" element={<Placeholder title="العقارات" />} />
+          <Route path="properties" element={<RealEstatePage />} />
           <Route
             path="property-partners"
-            element={<Placeholder title="شركاء العقارات" />}
+            element={<RealEstatePartnersPage />}
           />
-          <Route path="partnership" element={<Placeholder title="الشراكة" />} />
+
           <Route path="settings" element={<Placeholder title="الإعدادات" />} />
 
           {/* مسار في حال عدم وجود الصفحة */}

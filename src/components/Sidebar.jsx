@@ -58,7 +58,7 @@ export default function Sidebar({ isOpen, toggleMobileMenu }) {
           <SidebarLink to="/expenses" icon={Receipt} label="المصروفات اليومية والشهرية" />
           <SidebarLink to="/ai-insights" icon={BrainCircuit} label="الرؤى الذكية" />
           <SidebarLink to="/ai-history" icon={History} label="سجل التحليلات" />
-          <SidebarLink to="/file-explorer" icon={FolderOpen} label="مستعرض الملفات" />
+          <SidebarLink to="/files" icon={FolderOpen} label="مستعرض الملفات" />
           <SidebarLink to="/settings" icon={Settings} label="الإعدادات" />
         </ul>
       </nav>
