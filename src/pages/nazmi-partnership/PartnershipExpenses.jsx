@@ -196,7 +196,7 @@ export default function PartnershipExpenses({ settings, getFullUrl, transactions
             <div className="text-center py-10 text-slate-400 font-bold text-sm">لا توجد مصاريف مسجلة</div>
           ) : (
             displayExpenses.map((exp) => (
-              <ExpenseCard key={exp.id} item={exp} onEdit={() => openModal(exp)} onDelete={() => handleDelete(exp.id)} />
+              <ExpenseCard key={exp.id} item={exp} onEdit={() => openModal(exp)} onDelete={() => handleDelete(exp.id)} getFullUrl={getFullUrl} />
             ))
           )}
         </div>
@@ -395,7 +395,7 @@ export default function PartnershipExpenses({ settings, getFullUrl, transactions
   );
 }
 
-function ExpenseCard({ item, onEdit, onDelete }) {
+function ExpenseCard({ item, onEdit, onDelete, getFullUrl }) {
   return (
     <div className="p-3 space-y-2.5">
       <div className="flex justify-between items-start gap-2">
