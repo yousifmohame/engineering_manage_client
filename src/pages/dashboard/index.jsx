@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   LayoutDashboard, ChevronDown, Plus, FileText, House, Vault,
-  Coins, Briefcase, Wallet, TrendingUp, ChartColumn, CircleAlert, Sparkles, LoaderCircle, Info,
+  Coins, Briefcase, Wallet, TrendingUp, ChartColumn, CircleAlert, Sparkles, LoaderCircle, Info, Bot
 } from "lucide-react";
 import {
   PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, CartesianGrid,
@@ -9,7 +9,7 @@ import {
 } from "recharts";
 
 import { dashboardService } from "../../services/dashboardService";
-import { aiService } from "../../services/aiService"; // 🌟 استيراد خدمة الذكاء الاصطناعي
+import { aiService } from "../../services/aiService"; 
 
 export default function DashboardPage() {
   const [isQuickActionsOpen, setIsQuickActionsOpen] = useState(false);
@@ -19,7 +19,7 @@ export default function DashboardPage() {
   const [dashboardData, setDashboardData] = useState({
     stats: null,
     assetDistribution: [],
-    trendData: [] // 🌟 أضفنا مسار الرسم البياني
+    trendData: [] 
   });
 
   // 🌟 حالات الذكاء الاصطناعي
@@ -50,31 +50,26 @@ export default function DashboardPage() {
     fetchDashboardData();
   }, []);
 
-  // 🌟 تشغيل الذكاء الاصطناعي تلقائياً بعد تحميل البيانات
-  useEffect(() => {
-    const fetchAiInsight = async () => {
-      if (dashboardData.stats) {
-        setIsAiLoading(true);
-        try {
-          // نطلب من الذكاء الاصطناعي تحليل الأرقام باختصار
-          const prompt = "بصفتك مستشاري المالي، قم بتحليل سريع لهذه الأرقام وأعطني نصيحة واحدة أو ملاحظة هامة في سطرين كحد أقصى لتعرض في لوحة التحكم الخاصة بي.";
-          const response = await aiService.askAi(prompt, dashboardData.stats);
-          
-          if (response.error) {
-             setAiInsight("الخوادم مشغولة حالياً، لم نتمكن من توليد نصيحة ذكية.");
-          } else {
-             setAiInsight(response.reply);
-          }
-        } catch (error) {
-          setAiInsight("تعذر الاتصال بالمساعد الذكي.");
-        } finally {
-          setIsAiLoading(false);
-        }
+  // 🌟 دالة التشغيل اليدوي للتحليل
+  const handleAnalyze = async () => {
+    if (!dashboardData.stats) return;
+    
+    setIsAiLoading(true);
+    try {
+      const prompt = "بصفتك مستشاري المالي، قم بتحليل سريع لهذه الأرقام وأعطني نصيحة واحدة أو ملاحظة هامة في سطرين كحد أقصى لتعرض في لوحة التحكم الخاصة بي.";
+      const response = await aiService.askAi(prompt, dashboardData.stats);
+      
+      if (response.error) {
+         setAiInsight("الخوادم مشغولة حالياً، لم نتمكن من توليد نصيحة ذكية.");
+      } else {
+         setAiInsight(response.reply);
       }
-    };
-
-    fetchAiInsight();
-  }, [dashboardData.stats]); // تعمل هذه الدالة فقط عندما تتغير الإحصائيات (تتحمل)
+    } catch (error) {
+      setAiInsight("تعذر الاتصال بالمساعد الذكي.");
+    } finally {
+      setIsAiLoading(false);
+    }
+  };
 
   const formatNum = (num) => Number(num).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -87,10 +82,8 @@ export default function DashboardPage() {
     );
   }
 
-  // استخدام البيانات الحقيقية بالكامل
   const { stats, assetDistribution, trendData } = dashboardData;
 
-  // تنبيهات وهمية مؤقتة (لأن نظام التنبيهات يتطلب جدولاً خاصاً للإشعارات)
   const alerts = [
     { id: 1, title: "شقة التجمع", message: `${formatNum(stats.liabilities.sar)} SAR`, type: "المبلغ المتبقي الكلي" },
   ];
@@ -255,7 +248,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* الرسم المساحي للمصروفات والدخل (الحقيقي) */}
+          {/* الرسم المساحي للمصروفات والدخل */}
           <div className="border-slate-200 bg-white shadow-sm rounded-2xl overflow-hidden border-0">
             <div className="border-b border-slate-100 bg-slate-50/50 p-6 flex items-center gap-3">
               <div className="p-2 bg-indigo-100 text-indigo-600 rounded-lg"><ChartColumn size={20} /></div>
@@ -310,22 +303,33 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* 🌟 الرؤى الذكية الفعّالة */}
+          {/* 🌟 الرؤى الذكية التفاعلية */}
           <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-2xl p-6 border border-purple-100 shadow-sm h-fit">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-black text-purple-900 flex items-center gap-2 text-lg">
-                <Sparkles size={20} className="text-purple-600" /> رؤى ذكية - لوحة التحكم
+                <Sparkles size={20} className="text-purple-600" /> رؤى ذكية
               </h3>
+              
+              {/* 🌟 الزر التفاعلي لطلب التحليل */}
+              <button 
+                onClick={handleAnalyze} 
+                disabled={isAiLoading || !dashboardData.stats}
+                className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl shadow-sm text-sm font-bold transition-colors disabled:opacity-50"
+              >
+                {isAiLoading ? <LoaderCircle size={16} className="animate-spin" /> : <Bot size={16} />}
+                {aiInsight ? "تحديث التحليل" : "اطلب نصيحة"}
+              </button>
             </div>
-            {isAiLoading ? (
-              <div className="flex items-center gap-2 text-purple-600 text-sm py-2 font-bold bg-white/50 p-4 rounded-xl">
-                <LoaderCircle size={18} className="animate-spin" /> جاري تحليل الأرقام واستخراج النصيحة...
-              </div>
-            ) : (
-              <div className="text-purple-800 text-sm font-bold bg-white/60 p-4 rounded-xl border border-purple-100 leading-relaxed shadow-inner">
-                {aiInsight || "لا توجد نصائح حالياً."}
-              </div>
-            )}
+            
+            <div className="text-purple-800 text-sm font-bold bg-white/60 p-4 rounded-xl border border-purple-100 leading-relaxed shadow-inner min-h-[80px] flex items-center justify-center">
+              {isAiLoading ? (
+                 <span className="flex items-center gap-2 text-purple-500"><LoaderCircle size={18} className="animate-spin" /> جاري قراءة بياناتك واستخراج النصيحة...</span>
+              ) : aiInsight ? (
+                 aiInsight
+              ) : (
+                 <span className="text-slate-400">اضغط على الزر لطلب تحليل مالي سريع لمحفظتك.</span>
+              )}
+            </div>
           </div>
         </div>
 
